@@ -19,13 +19,13 @@
 
 if [[ $# -ne 4 ]]; then
     usage=$(cat << HEREDOC 
-Usage: ./$(basename $0) [arg1] [arg2] [arg3] [arg4] 
+Usage: ./$(basename "$0") [arg1] [arg2] [arg3] [arg4] 
     arg1: Name of test file used to run against student files
     arg2: String in test file to replace with file names from the folder
     arg3: Path to student submissions folder 
     arg4: Path to folder that contains test file (Output.txt is saved here)
 
-  example: ./$(basename $0) test_lab1.py lab1Solution Lab1HW1/CAs/Lab1/submissions Lab1HW1/CAs/Lab1
+  example: ./$(basename "$0") test_lab1.py lab1Solution Lab1HW1/CAs/Lab1/submissions Lab1HW1/CAs/Lab1
 HEREDOC
 )
     echo "$usage"
@@ -33,11 +33,11 @@ HEREDOC
 fi
 
 path=$(pwd)
-cp $4/$1 $3/$1
-cd "$3"
+cp "$4"/"$1" "$3"/"$1"
+cd "$3" || exit
 touch Output.txt
 echo "" > Output.txt
-let i=0
+(( i=0 ))
 
 for file in *; do           #removes hyphens and spaces from file names
     if [[ $file == *".py"* ]]; then   
@@ -55,7 +55,7 @@ for file in *; do           #For each file in the folder
     if [[ $file == *".py"* ]]; then   
         if [[ $file != "$1" ]]; then
             ((i++))
-            echo "$i" "########" $file "########" >> Output.txt
+            echo "$i" "########" "$file" "########" >> Output.txt
             file2=${file::-3}                                              #Takes off .py extension
             sed -i "s/$2/$file2/g" "$path"/"$3"/"$1" 2>/dev/null      #in test file, replaces solution file name ($3) with student's file name ($2)
             python3 "$1"      1>>Output.txt 2>>Output.txt             #runs test file 
@@ -71,5 +71,5 @@ rm -rf __pycache__
 
 sed -i "s/$file/$2/g" "$3"/"$1" 2>/dev/null     #changes it back at the end
 mv Output.txt "$path"/"$4"
-cd "$path"
+cd "$path" || exit
 echo "Finished testing all files"
