@@ -32,20 +32,20 @@ HEREDOC
     exit
 fi
 
-PATH=$(pwd)
-/bin/cp $4/$1 $3/$1
+path=$(pwd)
+cp $4/$1 $3/$1
 cd "$3"
-/bin/touch Output.txt
+touch Output.txt
 echo "" > Output.txt
 let i=0
 
 for file in *; do           #removes hyphens and spaces from file names
     if [[ $file == *".py"* ]]; then   
         if [[ $file == *"-"* ]]; then
-            /bin/mv "${file}" "${file//-/_}"
+            mv "${file}" "${file//-/_}"
         fi
         if [[ $file == *" "* ]]; then
-            /bin/mv "${file}" "${file// /_}"
+            mv "${file}" "${file// /_}"
         fi
     fi
 done
@@ -57,19 +57,19 @@ for file in *; do           #For each file in the folder
             ((i++))
             echo "$i" "########" $file "########" >> Output.txt
             file2=${file::-3}                                              #Takes off .py extension
-            /bin/sed -i "s/$2/$file2/g" "$PATH"/"$3"/"$1" 2>/dev/null      #in test file, replaces solution file name ($3) with student's file name ($2)
-            /bin/python3 "$1"      1>>Output.txt 2>>Output.txt             #runs test file 
-            /bin/sed -i "s/$file2/$2/g" "$PATH"/"$3"/"$1" 2>/dev/null      #swaps it back to the loop works again the next time
+            sed -i "s/$2/$file2/g" "$path"/"$3"/"$1" 2>/dev/null      #in test file, replaces solution file name ($3) with student's file name ($2)
+            python3 "$1"      1>>Output.txt 2>>Output.txt             #runs test file 
+            sed -i "s/$file2/$2/g" "$path"/"$3"/"$1" 2>/dev/null      #swaps it back to the loop works again the next time
             echo -e "\n" >> Output.txt
             echo "Finished file" $i
         fi
     fi
 done
 
-/bin/rm -rf __pycache__/*.pyc                        #removes compiled python files
-/bin/rm -rf __pycache__
+rm -rf __pycache__/*.pyc                        #removes compiled python files
+rm -rf __pycache__
 
-/bin/sed -i "s/$file/$2/g" "$3"/"$1" 2>/dev/null     #changes it back at the end
-/bin/mv Output.txt "$PATH"/"$4"
-cd "$PATH"
+sed -i "s/$file/$2/g" "$3"/"$1" 2>/dev/null     #changes it back at the end
+mv Output.txt "$path"/"$4"
+cd "$path"
 echo "Finished testing all files"
