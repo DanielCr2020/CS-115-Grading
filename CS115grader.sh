@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # CS115grader.sh
 
 #Daniel Craig
@@ -17,7 +17,8 @@
     # (This was on WSL2)
 #I had to have the /bin/ stuff to get it to work for me. You may need to change that.
 
-if [[ $# -ne 4 ]]; then
+if [[ $# -ne 4 ]] 
+then
     usage=$(cat << HEREDOC 
 Usage: ./$(basename "$0") [arg1] [arg2] [arg3] [arg4] 
     arg1: Name of test file used to run against student files
@@ -39,21 +40,28 @@ touch Output.txt
 echo "" > Output.txt
 (( i=0 ))
 
-for file in *; do           #removes hyphens and spaces from file names
-    if [[ $file == *".py"* ]]; then   
-        if [[ $file == *"-"* ]]; then
+for file in *       #removes hyphens and spaces from file names
+do
+    if [[ $file == *".py"* ]] 
+    then   
+        if [[ $file == *"-"* ]] 
+        then
             mv "${file}" "${file//-/_}"
         fi
-        if [[ $file == *" "* ]]; then
+        if [[ $file == *" "* ]] 
+        then
             mv "${file}" "${file// /_}"
         fi
     fi
 done
 
-for file in *; do           #For each file in the folder
+for file in *            #For each file in the folder
+do
     #Checks if the file is a python file and not the test script (so it won't try to run the test script against itself)
-    if [[ $file == *".py"* ]]; then   
-        if [[ $file != "$1" ]]; then
+    if [[ $file == *".py"* ]] 
+        then   
+        if [[ $file != "$1" ]] 
+            then
             ((i++))
             echo "$i" "########" "$file" "########" >> Output.txt
             file2=${file::-3}                                              #Takes off .py extension
